@@ -1,0 +1,33 @@
+web:
+  restart: always
+  build: ./web
+  expose:
+    - "8000"
+  links:
+    - postgres:postgres
+  volumes:
+    - path_to_your_local_project:/usr/src/app
+    - path_to_your_static_folder_local_project:/usr/src/app/static
+  environment:
+    DEBUG: 'true'
+  command: /usr/local/bin/gunicorn myproject.wsgi:application -w 3 -b :8000
+
+nginx:
+  restart: always
+  build: ./nginx
+  ports:
+    - "80:80"
+  volumes:
+    - path_to_your_local_project:/usr/src/app
+  volumes_from:
+    - web
+  links:
+    - web:web
+
+postgres:
+  restart: always
+  image: postgres:latest
+  ports:
+    - "5432:5432"
+  volumes:
+    - pgdata:/var/lib/postgresql/data/
