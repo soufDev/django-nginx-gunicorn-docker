@@ -6,8 +6,8 @@ web:
   links:
     - postgres:postgres
   volumes:
-    - path_to_your_local_project:/usr/src/app
-    - path_to_your_static_folder_local_project:/usr/src/app/static
+    - ./web:/usr/src/app
+    - ./web/static:/usr/src/app/static
   environment:
     DEBUG: 'true'
   command: /usr/local/bin/gunicorn myproject.wsgi:application -w 3 -b :8000
@@ -18,7 +18,7 @@ nginx:
   ports:
     - "80:80"
   volumes:
-    - path_to_your_local_project:/usr/src/app
+    - ./web:/usr/src/app
   volumes_from:
     - web
   links:
